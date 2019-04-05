@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using SignalRWebApi.Hubs;
+using SignalRWebApiProduser.Hubs;
 
-namespace SignalRWebApi
+namespace SignalRWebApiProduser
 {
     public class Startup
     {
@@ -21,15 +18,39 @@ namespace SignalRWebApi
         }
 
         public IConfiguration Configuration { get; }
+        public static IContainer ApplicationContainer { get; private set; }
 
 
 
-
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
             services.AddSignalR();
+
+            services.AddCors(options =>
+            {
+                // задаём политику CORS, чтобы наше клиентское приложение могло отправить запрос на сервер API
+                options.AddPolicy("default", policy =>
+                {
+                    policy
+                        .AllowAnyOrigin()
+                        .AllowCredentials()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
+
+
+
+            // Create the container builder.
+            var builder = new ContainerBuilder();
+            builder.Populate(services);
+            ApplicationContainer = builder.Build();
+            return new AutofacServiceProvider(ApplicationContainer);       
         }
+
 
 
 
@@ -40,11 +61,15 @@ namespace SignalRWebApi
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors("default");
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
             app.UseSignalR(routes =>
             {
                 routes.MapHub<BaseHub>("/baseHub");
             });
-            app.UseMvc();
+            //app.UseMvc();
         }
     }
 }

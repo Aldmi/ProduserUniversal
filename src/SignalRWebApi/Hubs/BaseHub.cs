@@ -2,12 +2,10 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 
-namespace SignalRWebApi.Hubs
+namespace SignalRWebApiProduser.Hubs
 {
     public class BaseHub : Hub
     {
-
-
 
         #region OvverideMembers
 
