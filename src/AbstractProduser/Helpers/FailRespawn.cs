@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ProduserUniversal.Helpers
+namespace AbstractProduser.Helpers
 {
 
     public class ErrorWrapper

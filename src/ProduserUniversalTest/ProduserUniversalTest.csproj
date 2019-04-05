@@ -7,7 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ProduserUniversal\ProduserUniversal.csproj" />
+    <ProjectReference Include="..\AbstractProduser\AbstractProduser.csproj" />
+    <ProjectReference Include="..\KaffkaProduser\KafkaProduser.csproj" />
+    <ProjectReference Include="..\ProdusersUnion\ProdusersUnion.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="CSharpFunctionalExtensions">
+      <HintPath>C:\Users\Aldmi\.nuget\packages\csharpfunctionalextensions\1.18.0\lib\netstandard2.0\CSharpFunctionalExtensions.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

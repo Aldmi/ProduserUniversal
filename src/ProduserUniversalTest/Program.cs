@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ProduserUniversal.AbstractProduser;
-using ProduserUniversal.ConcreteProdusers;
-using ProduserUniversal.Services;
+using AbstractProduser.AbstractProduser;
+using KafkaProduser;
+using ProdusersUnion;
 
 namespace ProduserUniversalTest
 {
@@ -10,8 +10,8 @@ namespace ProduserUniversalTest
     {
         static async Task Main(string[] args)
         {
-            IProduser kaffkaProd1 = new KaffkaProduser(TimeSpan.FromSeconds(3), 10);
-            IProduser kaffkaProd2 = new KaffkaProduser(TimeSpan.FromSeconds(0.5), 10);
+            IProduser kaffkaProd1 = new KafkaProduserWrapper(TimeSpan.FromSeconds(3), 10, new KaffkaProduserOption {Key= "Kafka1", BrokerEndpoints = ""});
+            IProduser kaffkaProd2 = new KafkaProduserWrapper(TimeSpan.FromSeconds(0.5), 10, new KaffkaProduserOption { Key = "Kafka2", BrokerEndpoints = "" });
             using (var prodUnionServ = new ProdusersUnionService())
             {
                 prodUnionServ.AddProduser("kaffka1", kaffkaProd1);

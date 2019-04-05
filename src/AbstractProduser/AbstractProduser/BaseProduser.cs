@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AbstractProduser.Helpers;
 using CSharpFunctionalExtensions;
-using ProduserUniversal.Helpers;
 
-namespace ProduserUniversal.AbstractProduser
+namespace AbstractProduser.AbstractProduser
 {
     public abstract class BaseProduser : IProduser
     {
