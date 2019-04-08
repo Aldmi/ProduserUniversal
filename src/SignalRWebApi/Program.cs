@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
-namespace SignalRWebApiProduser
+namespace WebApi
 {
     public class Program
     {

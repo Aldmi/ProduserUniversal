@@ -15,10 +15,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AbstractProduser\AbstractProduser.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Attributes\" />
+    <ProjectReference Include="..\Exchange.Base\Exchange.Base.csproj" />
+    <ProjectReference Include="..\KaffkaProduser\KafkaProduser.csproj" />
+    <ProjectReference Include="..\LogerSerilogProduser\LogerSerilogProduser.csproj" />
+    <ProjectReference Include="..\ProdusersUnion\ProdusersUnion.csproj" />
   </ItemGroup>
 
 </Project>

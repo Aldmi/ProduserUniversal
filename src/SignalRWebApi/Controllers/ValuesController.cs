@@ -1,16 +1,28 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace SignalRWebApiProduser.Controllers
+namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private readonly Exchange.Base.Exchange _exchange;
+
+        public ValuesController(Exchange.Base.Exchange exchange)
+        {
+            _exchange = exchange;
+        }
+
+
+
+
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public async Task<ActionResult<IEnumerable<string>>> Get()
         {
+            await _exchange.Execute();
             return new string[] { "value1", "value2" };
         }
 

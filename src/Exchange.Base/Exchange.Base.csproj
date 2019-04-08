@@ -6,8 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AbstractProduser\AbstractProduser.csproj" />
-    <ProjectReference Include="..\KaffkaProduser\KafkaProduser.csproj" />
-    <ProjectReference Include="..\LogerSerilogProduser\LogerSerilogProduser.csproj" />
+    <ProjectReference Include="..\ProdusersUnion\ProdusersUnion.csproj" />
   </ItemGroup>
 
 </Project>

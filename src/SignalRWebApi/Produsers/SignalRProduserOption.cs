@@ -1,4 +1,4 @@
-﻿namespace SignalRWebApiProduser.Options
+﻿namespace WebApi.Produsers
 {
     public class SignalRProduserOption
     {
