@@ -56,7 +56,6 @@ namespace KafkaProduser
             _producer = new Producer<Null, string>(config, new NullSerializer(), new StringSerializer(Encoding.UTF8));
             _producer.OnLog += OnLog;
             _producer.OnError += OnError;
-            _owner = _producer;
         }
 
         #endregion
@@ -85,6 +84,9 @@ namespace KafkaProduser
 
 
         #region OvverideMembers
+
+        protected override IDisposable Owner => _producer;
+
 
         protected override async Task<Result<string, ErrorWrapper>> SendConcrete(string message, string invokerName = null, CancellationToken ct = default(CancellationToken))
         {

@@ -11,8 +11,7 @@ namespace AbstractProduser.AbstractProduser
         #region field
 
         private TimeSpan _timeRequest;
-        protected IDisposable _owner;
-
+   
         #endregion
 
 
@@ -102,6 +101,7 @@ namespace AbstractProduser.AbstractProduser
 
         #region AbstractMembers
 
+        protected abstract IDisposable Owner { get; }
         protected abstract Task<Result<string, ErrorWrapper>> SendConcrete(string message, string invokerName = null, CancellationToken ct = default(CancellationToken));
         protected abstract Task<Result<string, ErrorWrapper>> SendConcrete(object message, string invokerName = null, CancellationToken ct = default(CancellationToken));
 
@@ -113,7 +113,7 @@ namespace AbstractProduser.AbstractProduser
 
         public void Dispose()
         {
-           _owner?.Dispose();
+           Owner?.Dispose();
         }
 
         #endregion

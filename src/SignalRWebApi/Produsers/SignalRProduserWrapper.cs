@@ -28,13 +28,19 @@ namespace WebApi.Produsers
 
         #endregion
 
- 
+        
+    
+        #region OvverideMembers
+
+        protected override IDisposable Owner => null;
+
 
         protected override async Task<Result<string, ErrorWrapper>> SendConcrete(string message, string invokerName = null, CancellationToken ct = default(CancellationToken))
         {
             try
             {
-                invokerName = invokerName ?? _option.MethodeName;
+                //_hubProxy.Clients.
+                 invokerName = invokerName ?? _option.MethodeName;
                 await _hubProxy.Clients.All.SendCoreAsync(invokerName, new object[] { message }, ct);
                 return Result.Ok<string, ErrorWrapper>("Ok");
             }
@@ -50,10 +56,6 @@ namespace WebApi.Produsers
             throw new NotImplementedException();
         }
 
-
-        public void Dispose()
-        {
-
-        }
+        #endregion
     }
 }

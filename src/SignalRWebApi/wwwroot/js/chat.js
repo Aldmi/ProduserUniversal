@@ -3,6 +3,21 @@
 let hubUrl = 'http://localhost:5000/providerHub';
 var connection = new signalR.HubConnectionBuilder().withUrl(hubUrl).build();
 
+//Если в течение этого периода сервер не присылает никакого сообщения, то клиент считает, что подключение к серверу разорвано. 
+//вызывается событие onclose()
+connection.serverTimeoutInMilliseconds = 1000 * 60 * 10; //1000 * 60 * 10
+
+//событие закрытия соединения
+connection.onclose(function () {
+    console.info("$.onclose Event: " + connection.state);
+    //рестарт после 5 сек
+    //setTimeout(function () {
+    //    connection.start();
+    //}, 5000); 
+});
+
+
+
 connection.on("ReceiveMessage", function (message) {
     var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     var encodedMsg = `says ${msg}`;
@@ -33,6 +48,26 @@ document.getElementById("sendButton").addEventListener("click", function (event)
         });
     event.preventDefault();
 });
+
+
+document.getElementById("disconnectButton").addEventListener("click", function (event) {
+    console.info("$.connection.state: " + connection.state);
+    connection.stop();
+});
+
+document.getElementById("reconnectButton").addEventListener("click", function (event) {
+    if (connection.state === 0) 
+    {
+        connection.start();
+    }  
+    else
+    {
+        connection.stop();
+        connection.start();
+    }
+    console.info("$.connection.hub.state: " + connection.state);
+});
+
 
 
 document.getElementById("StartStream").addEventListener("click", function (event) {
