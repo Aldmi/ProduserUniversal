@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AbstractProduser\AbstractProduser.csproj" />
-    <ProjectReference Include="..\ProdusersUnion\ProdusersUnion.csproj" />
+    <ProjectReference Include="..\ProdusersUnion\ProdusersMediator.csproj" />
   </ItemGroup>
 
 </Project>

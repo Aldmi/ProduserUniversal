@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using AbstractProduser.AbstractProduser;
 using AbstractProduser.Helpers;
+using Autofac.Features.OwnedInstances;
 using CSharpFunctionalExtensions;
 
-namespace ProdusersUnion
+namespace ProdusersMediator
 {
-    public class ProdusersUnionService : IDisposable
+    public class ProdusersUnion : IDisposable
     {
         #region fields
 
-        private readonly ConcurrentDictionary<string, IProduser> _produsersDict = new ConcurrentDictionary<string, IProduser>();
+        private readonly ConcurrentDictionary<string, Owned<IProduser>> _produsersDict = new ConcurrentDictionary<string, Owned<IProduser>>();
 
         #endregion
 
@@ -22,7 +22,7 @@ namespace ProdusersUnion
 
         #region prop
 
-        public ReadOnlyDictionary<string, IProduser> GetProduserDict => new ReadOnlyDictionary<string, IProduser>(_produsersDict);
+        //public ReadOnlyDictionary<string, IProduser> GetProduserDict => new ReadOnlyDictionary<string, IProduser>(_produsersDict.Select(owned=>owned.Value));
         public int GetProdusersCount => _produsersDict.Count;
 
         #endregion
@@ -31,9 +31,8 @@ namespace ProdusersUnion
 
         #region ctor
 
-        public ProdusersUnionService()
+        public ProdusersUnion()
         {
-           
         }
 
         #endregion
@@ -43,7 +42,7 @@ namespace ProdusersUnion
 
         #region Methods
 
-        public void AddProduser(string key, IProduser value)
+        public void AddProduser(string key, Owned<IProduser> value)
         {
             _produsersDict[key] = value;
         }
@@ -51,16 +50,22 @@ namespace ProdusersUnion
 
         public bool RemoveProduser(string key)
         {
-            return _produsersDict.TryRemove(key, out var val);
+            if (!_produsersDict.ContainsKey(key))
+                return false;
+                
+            var owner= _produsersDict[key];
+            var res= _produsersDict.TryRemove(key, out var val);         
+            owner.Dispose();
+            return res;
         }
 
 
         /// <summary>
         /// Отправить всем продюссерам
         /// </summary>
-        public async Task<IList<Result<string, ErrorWrapper>>> SendAll(string message)
+        public async Task<IList<Result<string, ErrorWrapper>>> SendAll(string message, string invokerName = null)
         {
-            var tasks = _produsersDict.Values.Select(produser => produser.Send(message)).ToList();
+            var tasks = _produsersDict.Values.Select(produser => produser.Value.Send(message, invokerName)).ToList();
             var results= await Task.WhenAll(tasks);
             return results;
         }
@@ -69,12 +74,12 @@ namespace ProdusersUnion
         /// <summary>
         /// Отправить продюсеру по ключу
         /// </summary>
-        public async Task<Result<string, ErrorWrapper>> Send(string key, string message)
+        public async Task<Result<string, ErrorWrapper>> Send(string key, string message, string invokerName = null)
         {
            if(!_produsersDict.ContainsKey(key))
                throw new KeyNotFoundException(key);
 
-           var result= await _produsersDict[key].Send(message);
+           var result= await _produsersDict[key].Value.Send(message, invokerName);
            return result;
         }
 

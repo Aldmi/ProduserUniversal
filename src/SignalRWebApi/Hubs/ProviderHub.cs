@@ -4,14 +4,8 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace WebApi.Hubs
 {
-    public class BaseHub : Hub
+    public class ProviderHub : Hub
     {
-        public BaseHub()
-        {
-     
-        }
-
-
         #region OvverideMembers
 
         public override async Task OnConnectedAsync()
@@ -35,12 +29,12 @@ namespace WebApi.Hubs
         #region Client2ServerCall
 
         //RPC---------------------------------------------------------------------------
-        public async Task<string> SendMessage(string user, string message)
-        {
-            //throw new Exception("dsdsd");   //в JS клиенте перехватывается .catch(function(err).......)
-            await Clients.All.SendAsync("ReceiveMessage", user, message);
-            return "454545454545";
-        }
+        //public async Task<string> SendMessage(string user, string message)
+        //{
+        //    //throw new Exception("dsdsd");   //в JS клиенте перехватывается .catch(function(err).......)
+        //    await Clients.All.SendAsync("ReceiveMessage", user, message);
+        //    return "454545454545";
+        //}
 
         #endregion
     }

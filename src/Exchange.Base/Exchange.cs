@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ProdusersUnion;
+using ProdusersMediator;
 
 namespace Exchange.Base
 {
     public class Exchange
     {
-        private readonly ProdusersUnionService _produsersUnionService;
+        private readonly ProdusersUnion _produsersUnion;
 
-        public Exchange(ProdusersUnionService produsersUnionService)
+        public Exchange(ProdusersUnion produsersUnion)
         {
-            _produsersUnionService = produsersUnionService;
+            _produsersUnion = produsersUnion;
         }
 
 
@@ -21,7 +21,7 @@ namespace Exchange.Base
             try
             {
                 var message = "HelloWorold";
-                var res = await _produsersUnionService.SendAll(message);
+                var res = await _produsersUnion.SendAll(message); // TODO: Задавать invokerName= deviceName 
             }
             catch (Exception e)
             {

@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\AbstractProduser\AbstractProduser.csproj" />
     <ProjectReference Include="..\KaffkaProduser\KafkaProduser.csproj" />
     <ProjectReference Include="..\LogerSerilogProduser\LogerSerilogProduser.csproj" />

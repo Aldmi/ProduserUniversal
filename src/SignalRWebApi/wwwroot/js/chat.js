@@ -1,11 +1,11 @@
 ﻿"use strict";
 
-let hubUrl = 'http://localhost:5000/baseHub';
+let hubUrl = 'http://localhost:5000/providerHub';
 var connection = new signalR.HubConnectionBuilder().withUrl(hubUrl).build();
 
-connection.on("ReceiveMessage", function (user, message) {
+connection.on("ReceiveMessage", function (message) {
     var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    var encodedMsg = user + " says " + msg;
+    var encodedMsg = `says ${msg}`;
     var li = document.createElement("li");
     li.textContent = encodedMsg;
     document.getElementById("messagesList").appendChild(li);

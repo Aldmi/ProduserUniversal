@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AbstractProduser.AbstractProduser;
 using AbstractProduser.Helpers;
+using AbstractProduser.Options;
 using Confluent.Kafka;
 using Confluent.Kafka.Serialization;
 using CSharpFunctionalExtensions;
@@ -18,7 +19,7 @@ namespace KafkaProduser
     {
         #region field
 
-        private readonly KaffkaProduserOption _option;
+        private readonly KafkaProduserOption _option;
         //private readonly ILogger _logger;
         private readonly Producer<Null, string> _producer;
 
@@ -28,7 +29,7 @@ namespace KafkaProduser
 
         #region ctor
 
-        public KafkaProduserWrapper(TimeSpan timeRequest, int trottlingQuantity, KaffkaProduserOption option) : base(timeRequest, trottlingQuantity)
+        public KafkaProduserWrapper(KafkaProduserOption option) : base(option.TimeRequest, option.TrottlingQuantity)
         {
             _option = option;
             //_logger = logger;
@@ -85,11 +86,12 @@ namespace KafkaProduser
 
         #region OvverideMembers
 
-        protected override async Task<Result<string, ErrorWrapper>> SendConcrete(string message, CancellationToken ct)
+        protected override async Task<Result<string, ErrorWrapper>> SendConcrete(string message, string invokerName = null, CancellationToken ct = default(CancellationToken))
         {
             try
             {
-                var res= await ProduceAsync("", message); //TODO:как передавать topic?
+                invokerName = invokerName ?? _option.TopicName;
+                var res = await ProduceAsync(invokerName, message);
                 return res.Error != null ? 
                     Result.Fail<string, ErrorWrapper>(new ErrorWrapper(ResultError.RespawnProduserError, res.Error.ToString())) 
                     : Result.Ok<string, ErrorWrapper>(res.Value);
@@ -101,11 +103,12 @@ namespace KafkaProduser
         }
 
 
-        protected override async Task<Result<string, ErrorWrapper>> SendConcrete(object message, CancellationToken ct)
+        protected override async Task<Result<string, ErrorWrapper>> SendConcrete(object message, string invokerName = null, CancellationToken ct = default(CancellationToken))
         {
-            //TODO:заменить на реальную отправку kaffka
-            await Task.Delay(1000, ct);
-            return Result.Ok<string, ErrorWrapper>("Ок");
+            ////TODO:заменить на реальную отправку kaffka
+            //await Task.Delay(1000, ct);
+            //return Result.Ok<string, ErrorWrapper>("Ок");
+            throw new NotImplementedException();
         }
 
 

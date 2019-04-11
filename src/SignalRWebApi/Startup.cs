@@ -1,19 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using AbstractProduser.AbstractProduser;
+using AbstractProduser.Enums;
+using AbstractProduser.Options;
 using Autofac;
-using Autofac.Extensions.DependencyInjection;
-using Autofac.Features.OwnedInstances;
-using KafkaProduser;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ProdusersUnion;
+using ProdusersMediator;
 using WebApi.AutofacModules;
 using WebApi.Hubs;
-using WebApi.Produsers;
 
 namespace WebApi
 {
@@ -57,6 +55,7 @@ namespace WebApi
             catch (Exception ex)
             {
                 Console.WriteLine($"Ошибка Регистрации зависимостей в DI контейнере {ex}");
+                throw;
             }
         }
 
@@ -74,7 +73,7 @@ namespace WebApi
             app.UseStaticFiles();
             app.UseSignalR(routes =>
             {
-                routes.MapHub<BaseHub>("/baseHub");
+                routes.MapHub<ProviderHub>("/providerHub");
             });
             app.UseMvc();
         }
@@ -83,18 +82,37 @@ namespace WebApi
 
         private async Task InitializeAsync(ILifetimeScope scope)
         {
-            var prodUnionServ = scope.Resolve<ProdusersUnionService>();
-
-            IProduser kaffkaProd1 = new KafkaProduserWrapper(TimeSpan.FromSeconds(3), 10, new KaffkaProduserOption { Key = "Kafka1", BrokerEndpoints = "" });
-            IProduser kaffkaProd2 = new KafkaProduserWrapper(TimeSpan.FromSeconds(0.5), 10, new KaffkaProduserOption { Key = "Kafka2", BrokerEndpoints = "" });
-            var signalRProdFactory = scope.Resolve<Func<TimeSpan, int, Owned<SignalRProduser>>>(); //TODO: передавать Option
-            var produserOwner = signalRProdFactory(TimeSpan.FromSeconds(3),10);
-            var signalRProd = produserOwner.Value;
-
-            prodUnionServ.AddProduser("kaffka1", kaffkaProd1);
-            prodUnionServ.AddProduser("kaffka2", kaffkaProd2);
-            prodUnionServ.AddProduser("signalRProd1", signalRProd);
-
+            //DEBUG
+            var agrOption= new ProduserOptionAgregator
+            {
+                KafkaProduserOptions = new List<KafkaProduserOption>
+                {
+                    new KafkaProduserOption
+                    {
+                        ProduserType = ProduserType.Kafaka,
+                        Name = "Kafka_1",
+                        TimeRequest = TimeSpan.FromSeconds(3),
+                        TrottlingQuantity = 10,
+                        BrokerEndpoints = "192.168.100.3",
+                        TopicName = "ReceiveMessage"
+                    }
+                },
+                SignalRProduserOptions = new List<SignalRProduserOption>
+                {
+                    new SignalRProduserOption
+                    {
+                        ProduserType = ProduserType.SignalR,
+                        Name = "signalR_1",
+                        TimeRequest = TimeSpan.FromSeconds(3),
+                        TrottlingQuantity = 10,
+                        HubEndpoints = "192.168.100.3",
+                        MethodeName = "ReceiveMessage"
+                    }
+                }
+            };
+             //Заполнение сервиса
+            var produsersFactory = scope.Resolve<ProdusersFactory>();
+            produsersFactory.FillProduserUnion(agrOption);
             await Task.CompletedTask;
         }
     }

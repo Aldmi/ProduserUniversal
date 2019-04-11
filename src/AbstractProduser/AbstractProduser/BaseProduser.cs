@@ -40,15 +40,8 @@ namespace AbstractProduser.AbstractProduser
 
         #region Methode
 
-        //public Result<FailRespawn> Send11(string message)
-        //{
 
-        //    return Result<Fai;
-        //}
-
-
-
-        public async Task<Result<string, ErrorWrapper>> Send(string message)
+        public async Task<Result<string, ErrorWrapper>> Send(string message, string invokerName = null)
         {
             TrottlingCounter++;
             if(TrottlingCounter.IsTrottle)
@@ -57,7 +50,7 @@ namespace AbstractProduser.AbstractProduser
             var cts = new CancellationTokenSource(_timeRequest);
             try
             {
-                var res = await SendConcrete(message, cts.Token);
+                var res = await SendConcrete(message, invokerName, cts.Token);
                 return res;
             }
             catch (TaskCanceledException)
@@ -76,7 +69,7 @@ namespace AbstractProduser.AbstractProduser
         }
 
 
-        public async Task<Result<string, ErrorWrapper>> Send(object obj)
+        public async Task<Result<string, ErrorWrapper>> Send(Object obj, string invokerName = null)
         {
             TrottlingCounter++;
             if (TrottlingCounter.IsTrottle)
@@ -85,7 +78,7 @@ namespace AbstractProduser.AbstractProduser
             var cts = new CancellationTokenSource(_timeRequest);
             try
             {
-                var res = await SendConcrete(obj, cts.Token);
+                var res = await SendConcrete(obj, invokerName, cts.Token);
                 return res;
             }
             catch (TaskCanceledException)
@@ -109,8 +102,8 @@ namespace AbstractProduser.AbstractProduser
 
         #region AbstractMembers
 
-        protected abstract Task<Result<string, ErrorWrapper>> SendConcrete(string message, CancellationToken ct);
-        protected abstract Task<Result<string, ErrorWrapper>> SendConcrete(object message, CancellationToken ct);
+        protected abstract Task<Result<string, ErrorWrapper>> SendConcrete(string message, string invokerName = null, CancellationToken ct = default(CancellationToken));
+        protected abstract Task<Result<string, ErrorWrapper>> SendConcrete(object message, string invokerName = null, CancellationToken ct = default(CancellationToken));
 
         #endregion
 

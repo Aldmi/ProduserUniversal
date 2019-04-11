@@ -7,7 +7,7 @@ namespace AbstractProduser.AbstractProduser
 {
     public interface IProduser : IDisposable
     {
-        Task<Result<string, ErrorWrapper>> Send(string message);
-        Task<Result<string, ErrorWrapper>> Send(object message);
+        Task<Result<string, ErrorWrapper>> Send(string message, string invokerName = null);
+        Task<Result<string, ErrorWrapper>> Send(object message, string invokerName = null);
     }
 }

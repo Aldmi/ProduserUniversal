@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KafkaProduser", "KaffkaProd
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogerSerilogProduser", "LogerSerilogProduser\LogerSerilogProduser.csproj", "{17BF9B50-FEC8-49A8-9146-FB1BAE656518}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProdusersUnion", "ProdusersUnion\ProdusersUnion.csproj", "{A3AD6BD0-6EAB-4202-86A3-66719F5A85C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProdusersMediator", "ProdusersUnion\ProdusersMediator.csproj", "{A3AD6BD0-6EAB-4202-86A3-66719F5A85C3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{D477138D-2884-42B6-868E-FAB11906F16C}"
 EndProject
@@ -23,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProduserInfrastructure", "P
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Exchanges", "Exchanges", "{17C986F2-7F20-4E11-8B78-1828E2107D42}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exchange.Base", "Exchange.Base\Exchange.Base.csproj", "{95A3C673-9283-42EF-9465-953F601DA9D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Exchange.Base", "Exchange.Base\Exchange.Base.csproj", "{95A3C673-9283-42EF-9465-953F601DA9D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
