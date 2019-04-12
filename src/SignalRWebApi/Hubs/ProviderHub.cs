@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
+using WebApi.Produsers;
+using WebApi.SignalRClients;
 
 namespace WebApi.Hubs
 {
     public class ProviderHub : Hub
     {
+        private readonly SignaRProduserClientsStorage _clientsStorage;
+
         #region ctor
 
-        public ProviderHub() //TODO: передавть сервси который хранит подключенгных клиентов
+        public ProviderHub(SignaRProduserClientsStorage clientsStorage) //TODO: передавть сервси который хранит подключенгных клиентов CocurrentDict с DI SingleInstance
         {
-            
+            _clientsStorage = clientsStorage;
         }
 
         #endregion
@@ -23,6 +27,7 @@ namespace WebApi.Hubs
         public override async Task OnConnectedAsync()
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, "SignalR Users");
+            _clientsStorage.AddClient(Context.ConnectionId, new SignaRClientsInfo(Context.ConnectionId, "SignalR Users"));
             await base.OnConnectedAsync();
         }
 
@@ -30,6 +35,7 @@ namespace WebApi.Hubs
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, "SignalR Users");
+            _clientsStorage.RemoveClient(Context.ConnectionId);
             await base.OnDisconnectedAsync(exception);
         }
 
@@ -39,7 +45,7 @@ namespace WebApi.Hubs
 
 
         #region Client2ServerCall
-
+        //DEBUG
         //RPC---------------------------------------------------------------------------
         public async Task<string> SendMessage(string user, string message)
         {

@@ -4,6 +4,7 @@ using Autofac;
 using KafkaProduser;
 using ProdusersMediator;
 using WebApi.Produsers;
+using WebApi.SignalRClients;
 
 namespace WebApi.AutofacModules
 {
@@ -12,7 +13,9 @@ namespace WebApi.AutofacModules
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<ProdusersFactory>().InstancePerDependency();
-            builder.RegisterType<ProdusersUnion>().SingleInstance();             
+            builder.RegisterType<ProdusersUnion>().SingleInstance();
+            builder.RegisterType<SignaRProduserClientsStorage>().SingleInstance();
+            
             builder.RegisterType<SignalRProduserWrapper>().Keyed<IProduser>(ProduserType.SignalR).InstancePerDependency();
             builder.RegisterType<KafkaProduserWrapper>().Keyed<IProduser>(ProduserType.Kafaka).InstancePerDependency();
         }       

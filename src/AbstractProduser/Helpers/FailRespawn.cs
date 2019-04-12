@@ -36,7 +36,8 @@ namespace AbstractProduser.Helpers
         Trottling,
         SendException,
         Timeout,
-        RespawnProduserError
+        RespawnProduserError,
+        NoClientBySending
     }
 
 }
