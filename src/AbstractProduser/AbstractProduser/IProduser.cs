@@ -6,9 +6,9 @@ using CSharpFunctionalExtensions;
 
 namespace AbstractProduser.AbstractProduser
 {
-    public interface IProduser : IDisposable
+    public interface IProduser<out TOption> : IDisposable where TOption : BaseProduserOption
     {
-        T GetProduserOption<T>() where T : BaseProduserOption;
+        TOption Option { get; }
         Task<Result<string, ErrorWrapper>> Send(string message, string invokerName = null);
         Task<Result<string, ErrorWrapper>> Send(object message, string invokerName = null);
     }

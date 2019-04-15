@@ -11,11 +11,11 @@ using WebApi.SignalRClients;
 
 namespace WebApi.Produsers
 {
-    public class SignalRProduserWrapper : BaseProduser
+    public class SignalRProduserWrapper : BaseProduser<SignalRProduserOption>
     {
         private readonly IHubContext<ProviderHub> _hubProxy;
         private readonly SignaRProduserClientsStorage _clientsStorage;
-        private readonly SignalRProduserOption _option;
+
 
 
         #region ctor
@@ -25,7 +25,6 @@ namespace WebApi.Produsers
         {
             _hubProxy = hubProxy;
             _clientsStorage = clientsStorage;
-            _option = option;
         }
 
         #endregion
@@ -44,7 +43,7 @@ namespace WebApi.Produsers
 
             try
             {                
-                invokerName = invokerName ?? _option.MethodeName;
+                invokerName = invokerName ?? Option.MethodeName;
                 await _hubProxy.Clients.All.SendCoreAsync(invokerName, new object[] { message }, ct);
                 return Result.Ok<string, ErrorWrapper>("Ok");
             }

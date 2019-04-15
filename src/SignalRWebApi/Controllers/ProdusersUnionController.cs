@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AbstractProduser.Enums;
-using AbstractProduser.Options;
-using Microsoft.AspNetCore.Http;
+﻿using AbstractProduser.Options;
 using Microsoft.AspNetCore.Mvc;
 using ProdusersMediator;
 
@@ -15,20 +9,22 @@ namespace WebApi.Controllers
     public class ProdusersUnionController : ControllerBase
     {
         private readonly ProdusersFactory _produsersFactory;
-        private readonly ProdusersUnion _produsersUnion;
 
 
 
-        public ProdusersUnionController(ProdusersFactory produsersFactory, ProdusersUnion produsersUnion)
+        #region ctor
+
+        public ProdusersUnionController(ProdusersFactory produsersFactory)
         {
             _produsersFactory = produsersFactory;
-            _produsersUnion = produsersUnion;
         }
 
+        #endregion
 
 
 
-        // GET api/ProdusersUnion
+
+        //GET api/ProdusersUnion
         [HttpGet]
         public ActionResult<ProduserOptionAgregator> Get()
         {
@@ -38,7 +34,7 @@ namespace WebApi.Controllers
 
 
 
-        // POST api/ProdusersUnion
+        //POST api/ProdusersUnion
         [HttpPost]
         public ActionResult Post([FromBody] ProduserOptionAgregator value)
         {
@@ -47,12 +43,12 @@ namespace WebApi.Controllers
         }
 
 
-        // DELETE api/ProdusersUnion/key
+        //DELETE api/ProdusersUnion/key
         [HttpDelete("{key}")]
         public ActionResult Delete(string key)
         {
-           var res= _produsersFactory.DeleteProduserUnionByOptionAgregator(key);
-           return res ? (ActionResult) Ok() : NotFound(key);
+            var res = _produsersFactory.DeleteProduserUnionByOptionAgregator(key);
+            return res ? (ActionResult)Ok() : NotFound(key);
         }
     }
 }

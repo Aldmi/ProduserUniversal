@@ -7,11 +7,10 @@ using CSharpFunctionalExtensions;
 
 namespace AbstractProduser.AbstractProduser
 {
-    public abstract class BaseProduser : IProduser
+    public abstract class BaseProduser<TOption> : IProduser<TOption> where TOption : BaseProduserOption
     {
         #region field
 
-        private readonly BaseProduserOption _baseOption;
         private TimeSpan _timeRequest;
    
         #endregion
@@ -21,6 +20,7 @@ namespace AbstractProduser.AbstractProduser
         #region prop
 
         public TrottlingCounter TrottlingCounter { get; set; }
+        public TOption Option { get; }
 
         #endregion
 
@@ -28,11 +28,11 @@ namespace AbstractProduser.AbstractProduser
 
         #region ctor
 
-        protected BaseProduser(BaseProduserOption baseOption)
+        protected BaseProduser(TOption baseOption)
         {
-            _baseOption = baseOption;
             _timeRequest = baseOption.TimeRequest;
             TrottlingCounter= new TrottlingCounter(baseOption.TrottlingQuantity);
+            Option = baseOption;
         }
 
         #endregion
@@ -40,15 +40,6 @@ namespace AbstractProduser.AbstractProduser
 
 
         #region Methode
-
-        /// <summary>
-        /// Вернуть настройки провайдера
-        /// </summary>
-        /// <typeparam name="T">тип опций провайдера</typeparam>
-        public T GetProduserOption<T>() where T: BaseProduserOption
-        {
-            return _baseOption as T;
-        }
 
         public async Task<Result<string, ErrorWrapper>> Send(string message, string invokerName = null)
         {

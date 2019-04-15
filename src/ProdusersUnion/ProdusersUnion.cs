@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AbstractProduser.AbstractProduser;
 using AbstractProduser.Helpers;
+using AbstractProduser.Options;
 using Autofac.Features.OwnedInstances;
 using CSharpFunctionalExtensions;
 
@@ -15,7 +16,7 @@ namespace ProdusersMediator
     {
         #region fields
 
-        private readonly ConcurrentDictionary<string, Owned<IProduser>> _produsersDict = new ConcurrentDictionary<string, Owned<IProduser>>();
+        private readonly ConcurrentDictionary<string, ProduserOwner> _produsersDict = new ConcurrentDictionary<string, ProduserOwner>();
 
         #endregion
 
@@ -23,7 +24,7 @@ namespace ProdusersMediator
 
         #region prop
 
-        public ReadOnlyDictionary<string, IProduser> GetProduserDict => new ReadOnlyDictionary<string, IProduser>(_produsersDict.ToDictionary(d => d.Key, d => d.Value.Value));
+        public ReadOnlyDictionary<string, IProduser<BaseProduserOption>> GetProduserDict => new ReadOnlyDictionary<string, IProduser<BaseProduserOption>>(_produsersDict.ToDictionary(d => d.Key, d => d.Value.Produser));
         public int GetProdusersCount => _produsersDict.Count;
 
         #endregion
@@ -40,12 +41,11 @@ namespace ProdusersMediator
 
 
 
-
         #region Methods
 
-        public void AddProduser(string key, Owned<IProduser> value)
+        public void AddProduser(string key, IProduser<BaseProduserOption> value, IDisposable owner)
         {
-            _produsersDict[key] = value;
+              _produsersDict[key] = new ProduserOwner {Produser = value, Owner = owner};
         }
 
 
@@ -53,9 +53,9 @@ namespace ProdusersMediator
         {
             if (!_produsersDict.ContainsKey(key))
                 return false;
-                
-            var owner= _produsersDict[key];
-            var res= _produsersDict.TryRemove(key, out var val);         
+
+            var owner = _produsersDict[key].Owner;
+            var res = _produsersDict.TryRemove(key, out var val);
             owner.Dispose();
             return res;
         }
@@ -66,8 +66,8 @@ namespace ProdusersMediator
         /// </summary>
         public async Task<IList<Result<string, ErrorWrapper>>> SendAll(string message, string invokerName = null)
         {
-            var tasks = _produsersDict.Values.Select(produser => produser.Value.Send(message, invokerName)).ToList();
-            var results= await Task.WhenAll(tasks);
+            var tasks = _produsersDict.Values.Select(produserOwner => produserOwner.Produser.Send(message, invokerName)).ToList();
+            var results = await Task.WhenAll(tasks);
             return results;
         }
 
@@ -77,11 +77,11 @@ namespace ProdusersMediator
         /// </summary>
         public async Task<Result<string, ErrorWrapper>> Send(string key, string message, string invokerName = null)
         {
-           if(!_produsersDict.ContainsKey(key))
-               throw new KeyNotFoundException(key);
+            if (!_produsersDict.ContainsKey(key))
+                throw new KeyNotFoundException(key);
 
-           var result= await _produsersDict[key].Value.Send(message, invokerName);
-           return result;
+            var result = await _produsersDict[key].Produser.Send(message, invokerName);
+            return result;
         }
 
         #endregion
@@ -92,10 +92,22 @@ namespace ProdusersMediator
 
         public void Dispose()
         {
-            foreach (var prod in _produsersDict.Values)
+            foreach (var produserOwner in _produsersDict.Values)
             {
-                prod.Dispose();
+                produserOwner.Owner.Dispose();
             }
+        }
+
+        #endregion
+
+
+
+        #region NestedClasses
+
+        private class ProduserOwner
+        {
+            public IProduser<BaseProduserOption> Produser { get; set; }
+            public IDisposable Owner { get; set; }
         }
 
         #endregion

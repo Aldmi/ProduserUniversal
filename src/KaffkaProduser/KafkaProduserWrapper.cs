@@ -15,11 +15,10 @@ namespace KafkaProduser
     /// <summary>
     /// Отправка на шину сообщений Kaffka
     /// </summary>
-    public class KafkaProduserWrapper : BaseProduser
+    public class KafkaProduserWrapper : BaseProduser<KafkaProduserOption>
     {
         #region field
 
-        readonly KafkaProduserOption _option;
         //private readonly ILogger _logger;
         private readonly Producer<Null, string> _producer;
 
@@ -31,7 +30,6 @@ namespace KafkaProduser
 
         public KafkaProduserWrapper(KafkaProduserOption option) : base(option)
         {
-            _option = option;
             //_logger = logger;
 
             var config = new Dictionary<string, object>
@@ -92,7 +90,7 @@ namespace KafkaProduser
         {
             try
             {
-                invokerName = invokerName ?? _option.TopicName;
+                invokerName = invokerName ?? Option.TopicName;
                 var res = await ProduceAsync(invokerName, message);
                 return res.Error != null ? 
                     Result.Fail<string, ErrorWrapper>(new ErrorWrapper(ResultError.RespawnProduserError, res.Error.ToString())) 
