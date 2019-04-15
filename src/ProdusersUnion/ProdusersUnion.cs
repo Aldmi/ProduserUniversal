@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using AbstractProduser.AbstractProduser;
@@ -22,7 +23,7 @@ namespace ProdusersMediator
 
         #region prop
 
-        //public ReadOnlyDictionary<string, IProduser> GetProduserDict => new ReadOnlyDictionary<string, IProduser>(_produsersDict.Select(owned=>owned.Value));
+        public ReadOnlyDictionary<string, IProduser> GetProduserDict => new ReadOnlyDictionary<string, IProduser>(_produsersDict.ToDictionary(d => d.Key, d => d.Value.Value));
         public int GetProdusersCount => _produsersDict.Count;
 
         #endregion

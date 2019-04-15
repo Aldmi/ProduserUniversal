@@ -90,7 +90,7 @@ namespace WebApi
                     new KafkaProduserOption
                     {
                         ProduserType = ProduserType.Kafaka,
-                        Name = "Kafka_1",
+                        Key = "Kafka_1",
                         TimeRequest = TimeSpan.FromSeconds(3),
                         TrottlingQuantity = 10,
                         BrokerEndpoints = "192.168.100.3",
@@ -102,7 +102,7 @@ namespace WebApi
                     new SignalRProduserOption
                     {
                         ProduserType = ProduserType.SignalR,
-                        Name = "signalR_1",
+                        Key = "signalR_1",
                         TimeRequest = TimeSpan.FromSeconds(3),
                         TrottlingQuantity = 10,
                         HubEndpoints = "192.168.100.3",
@@ -112,7 +112,7 @@ namespace WebApi
             };
              //Заполнение сервиса
             var produsersFactory = scope.Resolve<ProdusersFactory>();
-            produsersFactory.FillProduserUnion(agrOption);
+            produsersFactory.FillProduserUnionByOptionAgregator(agrOption);
             await Task.CompletedTask;
         }
     }

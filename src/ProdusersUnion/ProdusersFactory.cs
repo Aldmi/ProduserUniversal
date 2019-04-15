@@ -31,19 +31,59 @@ namespace ProdusersMediator
         /// Добавляет созданные на базе опций продюссеры к ProdusersUnion
         /// </summary>
         /// <param name="optionAgregator"></param>
-        public void FillProduserUnion(ProduserOptionAgregator optionAgregator)
+        public void FillProduserUnionByOptionAgregator(ProduserOptionAgregator optionAgregator)
         {
             var prodUnionServ = _scope.Resolve<ProdusersUnion>();
             foreach (var option in optionAgregator.KafkaProduserOptions)
             {
-               var prod= Create(option);
-               prodUnionServ.AddProduser(option.Name, prod);
+                var prod = Create(option);
+                prodUnionServ.AddProduser(option.Key, prod);
             }
             foreach (var option in optionAgregator.SignalRProduserOptions)
             {
                 var prod = Create(option);
-                prodUnionServ.AddProduser(option.Name, prod);
+                prodUnionServ.AddProduser(option.Key, prod);
             }
+        }
+
+
+        public ProduserOptionAgregator GetProduserUnionOptionAgregator()
+        {
+            var agregator = new ProduserOptionAgregator();
+            var prodUnionServ = _scope.Resolve<ProdusersUnion>();
+            var produsers = prodUnionServ.GetProduserDict.Values;
+            foreach (var prod in produsers)
+            {
+                var option = prod.GetProduserOption<BaseProduserOption>();
+                switch (option.ProduserType)
+                {
+                    case ProduserType.Kafaka:
+                        var kafkaOption = option as KafkaProduserOption;
+                        agregator.KafkaProduserOptions.Add(kafkaOption);
+                        break;
+
+                    case ProduserType.SerilogLoger:
+                        break;
+
+                    case ProduserType.SignalR:
+                        var signalROption = option as SignalRProduserOption;
+                        agregator.SignalRProduserOptions.Add(signalROption);
+                        break;
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            return agregator;
+        }
+
+
+
+        public bool DeleteProduserUnionByOptionAgregator(string key)
+        {
+            var prodUnionServ = _scope.Resolve<ProdusersUnion>();
+            var res = prodUnionServ.RemoveProduser(key);
+            return res;
         }
 
 
@@ -54,7 +94,7 @@ namespace ProdusersMediator
         /// <typeparam name="T">тип продюссера</typeparam>
         /// <param name="option">настройки продюссера</param>
         /// <returns></returns>
-        public Owned<IProduser> Create<T>(T option)  where T : BaseProduserOption 
+        public Owned<IProduser> Create<T>(T option) where T : BaseProduserOption
         {
             var factory = _scope.ResolveKeyed<Func<T, Owned<IProduser>>>(option.ProduserType);
             var owner = factory(option);

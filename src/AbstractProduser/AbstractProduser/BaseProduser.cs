@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AbstractProduser.Helpers;
+using AbstractProduser.Options;
 using CSharpFunctionalExtensions;
 
 namespace AbstractProduser.AbstractProduser
@@ -10,6 +11,7 @@ namespace AbstractProduser.AbstractProduser
     {
         #region field
 
+        private readonly BaseProduserOption _baseOption;
         private TimeSpan _timeRequest;
    
         #endregion
@@ -26,19 +28,27 @@ namespace AbstractProduser.AbstractProduser
 
         #region ctor
 
-        protected BaseProduser(TimeSpan timeRequest, int trottlingQuantity)
+        protected BaseProduser(BaseProduserOption baseOption)
         {
-            _timeRequest = timeRequest;
-            TrottlingCounter= new TrottlingCounter(trottlingQuantity);
+            _baseOption = baseOption;
+            _timeRequest = baseOption.TimeRequest;
+            TrottlingCounter= new TrottlingCounter(baseOption.TrottlingQuantity);
         }
 
         #endregion
 
 
 
-
         #region Methode
 
+        /// <summary>
+        /// Вернуть настройки провайдера
+        /// </summary>
+        /// <typeparam name="T">тип опций провайдера</typeparam>
+        public T GetProduserOption<T>() where T: BaseProduserOption
+        {
+            return _baseOption as T;
+        }
 
         public async Task<Result<string, ErrorWrapper>> Send(string message, string invokerName = null)
         {

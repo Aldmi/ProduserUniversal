@@ -21,7 +21,7 @@ namespace WebApi.Produsers
         #region ctor
 
         public SignalRProduserWrapper(IHubContext<ProviderHub> hubProxy, SignaRProduserClientsStorage clientsStorage, SignalRProduserOption option) 
-            : base(option.TimeRequest, option.TrottlingQuantity)
+            : base(option)
         {
             _hubProxy = hubProxy;
             _clientsStorage = clientsStorage;

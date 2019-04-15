@@ -4,6 +4,10 @@ using System.Linq;
 
 namespace WebApi.SignalRClients
 {
+    /// <summary>
+    /// Хранит информацию о клиентах.
+    /// Concurrentsy
+    /// </summary>
     public class SignaRProduserClientsStorage
     {
         private readonly ConcurrentDictionary<string, SignaRClientsInfo> _clientsInfos  = new ConcurrentDictionary<string, SignaRClientsInfo>();

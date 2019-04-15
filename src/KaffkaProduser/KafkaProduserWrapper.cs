@@ -19,7 +19,7 @@ namespace KafkaProduser
     {
         #region field
 
-        private readonly KafkaProduserOption _option;
+        readonly KafkaProduserOption _option;
         //private readonly ILogger _logger;
         private readonly Producer<Null, string> _producer;
 
@@ -29,7 +29,7 @@ namespace KafkaProduser
 
         #region ctor
 
-        public KafkaProduserWrapper(KafkaProduserOption option) : base(option.TimeRequest, option.TrottlingQuantity)
+        public KafkaProduserWrapper(KafkaProduserOption option) : base(option)
         {
             _option = option;
             //_logger = logger;
