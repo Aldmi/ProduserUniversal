@@ -62,24 +62,18 @@ namespace ProdusersMediator
             var produsers = _produsersUnion.GetProduserDict.Values;
             foreach (var prod in produsers)
             {
-                var option = prod.Option;
-                switch (option.ProduserType)
+                switch (prod.Option)
                 {
-                    case ProduserType.Kafaka:
-                        var kafkaOption = option as KafkaProduserOption;
-                        agregator.KafkaProduserOptions.Add(kafkaOption);
-                        break;
-
-                    case ProduserType.SerilogLoger:
-                        break;
-
-                    case ProduserType.SignalR:
-                        var signalROption = option as SignalRProduserOption;
+                    case SignalRProduserOption signalROption:
                         agregator.SignalRProduserOptions.Add(signalROption);
                         break;
 
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    case KafkaProduserOption kafkaOption:
+                        agregator.KafkaProduserOptions.Add(kafkaOption);
+                        break;
+
+                    //case ProduserType.SerilogLoger:
+                    //    break;
                 }
             }
             return agregator;

@@ -12,7 +12,7 @@ namespace WebApi.Hubs
 
         #region ctor
 
-        public ProviderHub(SignaRProduserClientsStorage clientsStorage) //TODO: передавть сервси который хранит подключенгных клиентов CocurrentDict с DI SingleInstance
+        public ProviderHub(SignaRProduserClientsStorage clientsStorage)
         {
             _clientsStorage = clientsStorage;
         }

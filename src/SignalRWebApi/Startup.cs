@@ -89,7 +89,6 @@ namespace WebApi
                 {
                     new KafkaProduserOption
                     {
-                        ProduserType = ProduserType.Kafaka,
                         Key = "Kafka_1",
                         TimeRequest = TimeSpan.FromSeconds(3),
                         TrottlingQuantity = 10,
@@ -101,11 +100,9 @@ namespace WebApi
                 {
                     new SignalRProduserOption
                     {
-                        ProduserType = ProduserType.SignalR,
                         Key = "signalR_1",
                         TimeRequest = TimeSpan.FromSeconds(3),
                         TrottlingQuantity = 10,
-                        HubEndpoints = "192.168.100.3",
                         MethodeName = "ReceiveMessage"
                     }
                 }
