@@ -7,6 +7,11 @@ using CSharpFunctionalExtensions;
 
 namespace AbstractProduser.AbstractProduser
 {
+    /// <summary>
+    /// Базовый класс продюссера.
+    /// Определяет стратегию отправки сообщений
+    /// Определяет стратегию уничтожения объекта
+    /// </summary>
     public abstract class BaseProduser<TOption> : IProduser<TOption> where TOption : BaseProduserOption
     {
         #region field

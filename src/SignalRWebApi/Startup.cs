@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using ProdusersMediator;
 using WebApi.AutofacModules;
 using WebApi.Hubs;
@@ -28,6 +29,8 @@ namespace WebApi
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions();
+            services.Configure<ProduserOptionAgregator>(Configuration);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSignalR();
             services.AddCors(options =>
@@ -79,37 +82,12 @@ namespace WebApi
         }
 
 
-
-        private async Task InitializeAsync(ILifetimeScope scope)
+        private async Task InitializeAsync(IComponentContext scope)
         {
-            //DEBUG
-            var agrOption= new ProduserOptionAgregator
-            {
-                KafkaProduserOptions = new List<KafkaProduserOption>
-                {
-                    new KafkaProduserOption
-                    {
-                        Key = "Kafka_1",
-                        TimeRequest = TimeSpan.FromSeconds(3),
-                        TrottlingQuantity = 10,
-                        BrokerEndpoints = "192.168.100.3",
-                        TopicName = "ReceiveMessage"
-                    }
-                },
-                SignalRProduserOptions = new List<SignalRProduserOption>
-                {
-                    new SignalRProduserOption
-                    {
-                        Key = "signalR_1",
-                        TimeRequest = TimeSpan.FromSeconds(3),
-                        TrottlingQuantity = 10,
-                        MethodeName = "ReceiveMessage"
-                    }
-                }
-            };
-             //Заполнение сервиса
+            //Инициализация Коллекции провайдеров
+            var agrOption = scope.Resolve<IOptions<ProduserOptionAgregator>>();
             var produsersFactory = scope.Resolve<ProdusersFactory>();
-            produsersFactory.FillProduserUnionByOptionAgregator(agrOption);
+            produsersFactory.FillProduserUnionByOptionAgregator(agrOption.Value);
             await Task.CompletedTask;
         }
     }
