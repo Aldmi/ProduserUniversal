@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
-using WebApi.Produsers;
 using WebApi.SignalRClients;
 
 namespace WebApi.Hubs

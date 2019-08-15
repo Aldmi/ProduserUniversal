@@ -25,6 +25,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Exchanges", "Exchanges", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Exchange.Base", "Exchange.Base\Exchange.Base.csproj", "{95A3C673-9283-42EF-9465-953F601DA9D0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebClientProduser", "WebClientProduser\WebClientProduser.csproj", "{277EA067-20A2-4E80-A03A-44A86CFB11DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{95A3C673-9283-42EF-9465-953F601DA9D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95A3C673-9283-42EF-9465-953F601DA9D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95A3C673-9283-42EF-9465-953F601DA9D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{277EA067-20A2-4E80-A03A-44A86CFB11DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{277EA067-20A2-4E80-A03A-44A86CFB11DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{277EA067-20A2-4E80-A03A-44A86CFB11DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{277EA067-20A2-4E80-A03A-44A86CFB11DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,6 +74,7 @@ Global
 		{A3AD6BD0-6EAB-4202-86A3-66719F5A85C3} = {3DE0722D-0461-4726-954D-D9689F0B77F4}
 		{3DE0722D-0461-4726-954D-D9689F0B77F4} = {300AB9FF-981C-40D2-91BE-21EA24661871}
 		{95A3C673-9283-42EF-9465-953F601DA9D0} = {17C986F2-7F20-4E11-8B78-1828E2107D42}
+		{277EA067-20A2-4E80-A03A-44A86CFB11DB} = {F55C1F4D-0F56-4E10-9E62-75014C401419}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5743C937-9195-44F4-9FFB-620FA6237A3C}

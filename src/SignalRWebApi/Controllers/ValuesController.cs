@@ -23,7 +23,7 @@ namespace WebApi.Controllers
         public async Task<ActionResult<IEnumerable<string>>> Get()
         {
             await _exchange.Execute();
-            return new string[] { "value1", "value2" };
+            return new string[] { "exchange.Execute()" };
         }
 
         // GET api/values/5

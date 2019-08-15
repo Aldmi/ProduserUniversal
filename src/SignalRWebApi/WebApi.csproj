@@ -20,6 +20,7 @@
     <ProjectReference Include="..\KaffkaProduser\KafkaProduser.csproj" />
     <ProjectReference Include="..\LogerSerilogProduser\LogerSerilogProduser.csproj" />
     <ProjectReference Include="..\ProdusersUnion\ProdusersMediator.csproj" />
+    <ProjectReference Include="..\WebClientProduser\WebClientProduser.csproj" />
   </ItemGroup>
 
 </Project>

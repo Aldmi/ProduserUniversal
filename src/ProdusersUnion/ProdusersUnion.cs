@@ -12,6 +12,9 @@ using CSharpFunctionalExtensions;
 
 namespace ProdusersMediator
 {
+    //TODO: Нужно разбить на 2 интерфейса:
+    //1.IControlProdusersUnion (AddProduser, RemoveProduser) - Использовать в контроллере и при инициализации системы для редактирования списка Продюссеров.
+    //2.ISenderProdusersUnion (SendAll, Send) - использовать в Device для отправки ответов.
     public class ProdusersUnion : IDisposable
     {
         #region fields

@@ -6,6 +6,7 @@ using KafkaProduser;
 using ProdusersMediator;
 using WebApi.Produsers;
 using WebApi.SignalRClients;
+using WebClientProduser;
 
 namespace WebApi.AutofacModules
 {
@@ -15,10 +16,13 @@ namespace WebApi.AutofacModules
         {
             builder.RegisterType<ProdusersFactory>().InstancePerDependency();
             builder.RegisterType<ProdusersUnion>().SingleInstance();
+
             builder.RegisterType<SignaRProduserClientsStorage>().SingleInstance();
-            
             builder.RegisterType<SignalRProduserWrapper>().As<IProduser<SignalRProduserOption>>().InstancePerDependency();
+
             builder.RegisterType<KafkaProduserWrapper>().As<IProduser<KafkaProduserOption>>().InstancePerDependency();
+
+            builder.RegisterType<WebClientProduserWrapper>().As<IProduser<WebClientProduserOption>>().InstancePerDependency();
         }       
     }
 }

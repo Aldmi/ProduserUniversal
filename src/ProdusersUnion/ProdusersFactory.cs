@@ -15,17 +15,20 @@ namespace ProdusersMediator
         private readonly ProdusersUnion _produsersUnion;
         private readonly Func<SignalRProduserOption, Owned<IProduser<SignalRProduserOption>>> _signalRFactory;
         private readonly Func<KafkaProduserOption, Owned<IProduser<KafkaProduserOption>>> _kafkaFactory;
+        private readonly Func<WebClientProduserOption, Owned<IProduser<WebClientProduserOption>>> _webClientFactory;
 
 
         #region ctor
 
         public ProdusersFactory(ProdusersUnion produsersUnion,
                                 Func<SignalRProduserOption, Owned<IProduser<SignalRProduserOption>>> signalRFactory,
-                                Func<KafkaProduserOption, Owned<IProduser<KafkaProduserOption>>> kafkaFactory)
+                                Func<KafkaProduserOption, Owned<IProduser<KafkaProduserOption>>> kafkaFactory,
+                                Func<WebClientProduserOption, Owned<IProduser<WebClientProduserOption>>> webClientFactory)
         {
             _produsersUnion = produsersUnion;
             _signalRFactory = signalRFactory;
             _kafkaFactory = kafkaFactory;
+            _webClientFactory = webClientFactory;
         }
 
         #endregion
@@ -50,6 +53,11 @@ namespace ProdusersMediator
                 var prod = _signalRFactory(option);
                 _produsersUnion.AddProduser(option.Key, prod.Value, prod);
             }
+            foreach (var option in optionAgregator.WebClientProduserOptions)
+            {
+                var prod = _webClientFactory(option);
+                _produsersUnion.AddProduser(option.Key, prod.Value, prod);
+            }
         }
 
         /// <summary>
@@ -72,8 +80,12 @@ namespace ProdusersMediator
                         agregator.KafkaProduserOptions.Add(kafkaOption);
                         break;
 
-                    //case ProduserType.SerilogLoger:
-                    //    break;
+                    case WebClientProduserOption webClientOption:
+                        agregator.WebClientProduserOptions.Add(webClientOption);
+                        break;
+
+                        //case ProduserType.SerilogLoger:
+                        //    break;
                 }
             }
             return agregator;
