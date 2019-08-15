@@ -30,7 +30,7 @@ namespace WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddOptions();
-            services.Configure<ProduserOptionAgregator>(Configuration);
+            services.Configure<ProduserUnionOption>(Configuration);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSignalR();
             services.AddCors(options =>
@@ -85,9 +85,17 @@ namespace WebApi
         private async Task InitializeAsync(IComponentContext scope)
         {
             //Инициализация Коллекции провайдеров
-            var agrOption = scope.Resolve<IOptions<ProduserOptionAgregator>>();
-            var produsersFactory = scope.Resolve<ProdusersFactory>();
-            produsersFactory.FillProduserUnionByOptionAgregator(agrOption.Value);
+            var agrOption = scope.Resolve<IOptions<ProduserUnionOption>>();
+
+            //вариант для DI где produseUnion singleton.
+            //var produsersFactory = scope.Resolve<ProdusersFactory>();
+            //produsersFactory.FillProduserUnionByOptionAgregator(agrOption.Value);
+
+            //вариант для CWS
+            var produserUnionFactory = scope.Resolve<ProdusersUnionFactory>();
+            var produserUnion = produserUnionFactory.FillProduserUnionByOptionAgregator(agrOption.Value);
+            //produserUnion добавить в Storage по ключу
+
             await Task.CompletedTask;
         }
     }

@@ -14,6 +14,8 @@ namespace WebApi.AutofacModules
     {    
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<ProdusersUnionFactory>().InstancePerDependency();//для CWS
+
             builder.RegisterType<ProdusersFactory>().InstancePerDependency();
             builder.RegisterType<ProdusersUnion>().SingleInstance();
 

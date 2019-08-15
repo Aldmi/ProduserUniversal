@@ -33,9 +33,6 @@ namespace WebApi.Produsers
     
         #region OvverideMembers
 
-        protected override IDisposable Owner => null;
-
-
         protected override async Task<Result<string, ErrorWrapper>> SendConcrete(string message, string invokerName = null, CancellationToken ct = default(CancellationToken))
         {
             if(!_clientsStorage.Any)
@@ -57,6 +54,16 @@ namespace WebApi.Produsers
         protected override Task<Result<string, ErrorWrapper>> SendConcrete(object message, string invokerName = null, CancellationToken ct = default(CancellationToken))
         {
             throw new NotImplementedException();
+        }
+
+        #endregion
+
+
+
+        #region Disposable
+
+        public override void Dispose()
+        {
         }
 
         #endregion

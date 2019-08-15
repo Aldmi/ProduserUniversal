@@ -29,7 +29,7 @@ namespace WebClientProduser
 
         #region OvverideMembers
 
-        protected override IDisposable Owner { get; }
+
 
         #endregion
 
@@ -44,5 +44,17 @@ namespace WebClientProduser
         {
             throw new NotImplementedException();
         }
+
+
+
+
+        #region Disposable
+
+        public override void Dispose()
+        {
+          
+        }
+
+        #endregion
     }
 }

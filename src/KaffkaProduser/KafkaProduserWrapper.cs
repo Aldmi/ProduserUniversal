@@ -83,9 +83,6 @@ namespace KafkaProduser
 
         #region OvverideMembers
 
-        protected override IDisposable Owner => _producer;
-
-
         protected override async Task<Result<string, ErrorWrapper>> SendConcrete(string message, string invokerName = null, CancellationToken ct = default(CancellationToken))
         {
             try
@@ -110,6 +107,7 @@ namespace KafkaProduser
             //return Result.Ok<string, ErrorWrapper>("Ок");
             throw new NotImplementedException();
         }
+
 
 
         private async Task<Message<Null, string>> ProduceAsync(string topic, string value, int partition = -1)
@@ -143,6 +141,16 @@ namespace KafkaProduser
                 //    message?.Value ?? "N/A");
                 throw;
             }
+        }
+
+        #endregion
+
+
+        #region Disposable
+
+        public override void Dispose()
+        {
+           _producer.Dispose();
         }
 
         #endregion

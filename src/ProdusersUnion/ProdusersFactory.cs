@@ -40,20 +40,20 @@ namespace ProdusersMediator
         /// <summary>
         /// Добавляет созданные на базе опций продюссеры к ProdusersUnion
         /// </summary>
-        /// <param name="optionAgregator"></param>
-        public void FillProduserUnionByOptionAgregator(ProduserOptionAgregator optionAgregator)
+        /// <param name="unionOption"></param>
+        public void FillProduserUnionByOptionAgregator(ProduserUnionOption unionOption)
         {
-            foreach (var option in optionAgregator.KafkaProduserOptions)
+            foreach (var option in unionOption.KafkaProduserOptions)
             {
                 var prod = _kafkaFactory(option);
                 _produsersUnion.AddProduser(option.Key, prod.Value, prod);
             }
-            foreach (var option in optionAgregator.SignalRProduserOptions)
+            foreach (var option in unionOption.SignalRProduserOptions)
             {
                 var prod = _signalRFactory(option);
                 _produsersUnion.AddProduser(option.Key, prod.Value, prod);
             }
-            foreach (var option in optionAgregator.WebClientProduserOptions)
+            foreach (var option in unionOption.WebClientProduserOptions)
             {
                 var prod = _webClientFactory(option);
                 _produsersUnion.AddProduser(option.Key, prod.Value, prod);
@@ -64,9 +64,9 @@ namespace ProdusersMediator
         /// Верннуть все опции продюссеров
         /// </summary>
         /// <returns></returns>
-        public ProduserOptionAgregator GetProduserUnionOptionAgregator()
+        public ProduserUnionOption GetProduserUnionOptionAgregator()
         {
-            var agregator = new ProduserOptionAgregator();
+            var agregator = new ProduserUnionOption();
             var produsers = _produsersUnion.GetProduserDict.Values;
             foreach (var prod in produsers)
             {

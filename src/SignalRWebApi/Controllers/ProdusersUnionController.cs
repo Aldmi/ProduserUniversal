@@ -26,7 +26,7 @@ namespace WebApi.Controllers
 
         //GET api/ProdusersUnion
         [HttpGet]
-        public ActionResult<ProduserOptionAgregator> Get()
+        public ActionResult<ProduserUnionOption> Get()
         {
             var agrOptions = _produsersFactory.GetProduserUnionOptionAgregator();
             return new JsonResult(agrOptions);
@@ -36,7 +36,7 @@ namespace WebApi.Controllers
 
         //POST api/ProdusersUnion
         [HttpPost]
-        public ActionResult Post([FromBody] ProduserOptionAgregator value)
+        public ActionResult Post([FromBody] ProduserUnionOption value)
         {
             _produsersFactory.FillProduserUnionByOptionAgregator(value);
             return Ok();
