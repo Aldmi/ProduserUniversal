@@ -25,6 +25,8 @@ namespace WebApi.AutofacModules
             builder.RegisterType<KafkaProduserWrapper>().As<IProduser<KafkaProduserOption>>().InstancePerDependency();
 
             builder.RegisterType<WebClientProduserWrapper>().As<IProduser<WebClientProduserOption>>().InstancePerDependency();
+
+           // builder.RegisterType<HttpClientSupport>().As<IHttpClientSupport>().InstancePerDependency();//DEBUG
         }       
     }
 }

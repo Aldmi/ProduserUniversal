@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using AbstractProduser.AbstractProduser;
@@ -12,6 +14,8 @@ namespace WebClientProduser
     {
         #region field
 
+        private readonly WebClientProduserOption _option;
+        private readonly IHttpClientSupport _httpClientSupport;
 
         #endregion
 
@@ -19,32 +23,77 @@ namespace WebClientProduser
 
         #region ctor
 
-        public WebClientProduserWrapper(WebClientProduserOption option) : base(option)
+       public WebClientProduserWrapper(WebClientProduserOption option, IHttpClientSupport httpClientSupport) : base(option)
         {
+            _option = option;
+            _httpClientSupport = httpClientSupport;
         }
 
         #endregion
-
 
 
         #region OvverideMembers
 
-
-
-        #endregion
-
-
-
-        protected override Task<Result<string, ErrorWrapper>> SendConcrete(string message, string invokerName = null, CancellationToken ct = default(CancellationToken))
+        protected override async Task<Result<string, ErrorWrapper>> SendConcrete(string message, string invokerName = null, CancellationToken ct = default(CancellationToken))
         {
-            throw new NotImplementedException();
+            try
+            {
+                var res = await SendMessage(_option.HttpMethode, _option.Url, message, ct);
+                if (res.IsSuccessStatusCode)
+                    return Result.Ok<string, ErrorWrapper>(res.ToString());
+
+                switch (res.StatusCode)
+                {
+                    case HttpStatusCode.RequestTimeout: 
+                        return Result.Fail<string, ErrorWrapper>(new ErrorWrapper(ResultError.Timeout));                                   //Timeout ожидания ответа.
+
+                    case HttpStatusCode.NotFound:
+                        return Result.Fail<string, ErrorWrapper>(new ErrorWrapper(ResultError.NoClientBySending));                         //Нет соединения с сервером.
+
+                    default:
+                        return Result.Fail<string, ErrorWrapper>(new ErrorWrapper(ResultError.SendException, res.ToString()));     //Ошибка отправки
+                }
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail<string, ErrorWrapper>(new ErrorWrapper(ResultError.RespawnProduserError, ex));                         //Неизвестная ошибка обмена
+            }
         }
+
 
         protected override Task<Result<string, ErrorWrapper>> SendConcrete(object message, string invokerName = null, CancellationToken ct = default(CancellationToken))
         {
             throw new NotImplementedException();
         }
 
+        #endregion
+
+
+
+        #region Methods
+
+        private async Task<HttpResponseMessage> SendMessage(HttpMethode methode, string strUri, string message, CancellationToken ct)
+        {
+            HttpResponseMessage resp;
+            Uri uri;
+            switch (methode)
+            {
+                case HttpMethode.Get:
+                    uri = new UriBuilder(strUri + $"/{message}").Uri;
+                    resp = await _httpClientSupport.GetAsync(uri, ct);
+                    return resp;
+
+                case HttpMethode.Post:
+                    uri = new UriBuilder(strUri).Uri;
+                    resp = await _httpClientSupport.PostAsync(uri, message, ct);
+                    return resp;
+
+                default:
+                    throw new NotSupportedException($"{_option.HttpMethode} не подерживается обработкой");
+            }
+        }
+
+        #endregion
 
 
 
@@ -52,7 +101,7 @@ namespace WebClientProduser
 
         public override void Dispose()
         {
-          
+            //HttpClientSupport.HttpClient создается через HttpClientFactory, следовательно DI управляет временем его жизни
         }
 
         #endregion

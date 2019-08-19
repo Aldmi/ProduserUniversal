@@ -44,24 +44,24 @@ namespace ProdusersMediator
         /// <param name="unionOption"></param>
         public ProdusersUnion FillProduserUnionByOptionAgregator(ProduserUnionOption unionOption)
         {
-            var produsersUnion=  _produsersUnionFactory(unionOption);
-          foreach (var option in unionOption.KafkaProduserOptions)
-          {
-              var prod = _kafkaFactory(option);
-              produsersUnion.AddProduser(option.Key, prod.Value, prod);
-          }
-          foreach (var option in unionOption.SignalRProduserOptions)
-          {
-              var prod = _signalRFactory(option);
-              produsersUnion.AddProduser(option.Key, prod.Value, prod);
-          }
-          foreach (var option in unionOption.WebClientProduserOptions)
-          {
-              var prod = _webClientFactory(option);
-              produsersUnion.AddProduser(option.Key, prod.Value, prod);
-          }
+            var produsersUnion = _produsersUnionFactory(unionOption);
+            foreach (var option in unionOption.KafkaProduserOptions)
+            {
+                var prod = _kafkaFactory(option);
+                produsersUnion.AddProduser(option.Key, prod.Value, prod);
+            }
+            foreach (var option in unionOption.SignalRProduserOptions)
+            {
+                var prod = _signalRFactory(option);
+                produsersUnion.AddProduser(option.Key, prod.Value, prod);
+            }
+            foreach (var option in unionOption.WebClientProduserOptions)
+            {
+                var prod = _webClientFactory(option);
+                produsersUnion.AddProduser(option.Key, prod.Value, prod);
+            }
 
-          return produsersUnion;
+            return produsersUnion;
         }
 
         #endregion

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AbstractProduser.AbstractProduser;
 using AbstractProduser.Enums;
 using AbstractProduser.Options;
 using Autofac;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.Options;
 using ProdusersMediator;
 using WebApi.AutofacModules;
 using WebApi.Hubs;
+using WebClientProduser;
 
 namespace WebApi
 {
@@ -45,6 +47,10 @@ namespace WebApi
                         .AllowAnyMethod();
                 });
             });
+
+            //services.AddHttpClient<IProduser<WebClientProduserOption>, WebClientProduserWrapper>();
+            //services.AddTransient<IHttpClientSupport, HttpClientSupport>();
+            services.AddHttpClient<IHttpClientSupport, HttpClientSupport>();
         }
 
 
