@@ -38,7 +38,7 @@ namespace WebClientProduser
         {
             try
             {
-                var res = await SendMessage(_option.HttpMethode, _option.Url, message, ct);
+                var res = await SendHttpMessage(_option.HttpMethode, _option.Url, message, ct);
                 if (res.IsSuccessStatusCode)
                     return Result.Ok<string, ErrorWrapper>(res.ToString());
 
@@ -72,7 +72,7 @@ namespace WebClientProduser
 
         #region Methods
 
-        private async Task<HttpResponseMessage> SendMessage(HttpMethode methode, string strUri, string message, CancellationToken ct)
+        private async Task<HttpResponseMessage> SendHttpMessage(HttpMethode methode, string strUri, string message, CancellationToken ct)
         {
             HttpResponseMessage resp;
             Uri uri;
@@ -101,7 +101,7 @@ namespace WebClientProduser
 
         public override void Dispose()
         {
-            //HttpClientSupport.HttpClient создается через HttpClientFactory, следовательно DI управляет временем его жизни
+            //HttpClientSupport.HttpClient создается через HttpClientFactory, следовательно DI управляет временем его жизни.
         }
 
         #endregion

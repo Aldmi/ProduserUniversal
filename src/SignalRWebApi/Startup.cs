@@ -48,8 +48,6 @@ namespace WebApi
                 });
             });
 
-            //services.AddHttpClient<IProduser<WebClientProduserOption>, WebClientProduserWrapper>();
-            //services.AddTransient<IHttpClientSupport, HttpClientSupport>();
             services.AddHttpClient<IHttpClientSupport, HttpClientSupport>();
         }
 

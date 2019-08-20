@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using ProdusersMediator;
 
 namespace Exchange.Base
@@ -20,8 +21,19 @@ namespace Exchange.Base
 
             try
             {
-                var message = "HelloWorold";
-                var res = await _produsersUnion.SendAll(message); // TODO: Задавать invokerName= deviceName 
+                var resp= new RespWrapper
+                {
+                    Id=10,
+                    StatusCode = "Привет-пока"
+                };
+
+                var settings = new JsonSerializerSettings
+                {
+                    Formatting = Formatting.None,                 //Отступы дочерних элементов 
+                    NullValueHandling = NullValueHandling.Ignore  //Игнорировать пустые теги
+                };
+                var jsonResp = JsonConvert.SerializeObject(resp, settings);
+                var res = await _produsersUnion.SendAll(jsonResp); // TODO: Задавать invokerName= deviceName 
             }
             catch (Exception e)
             {
