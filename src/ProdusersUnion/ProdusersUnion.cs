@@ -9,6 +9,8 @@ using AbstractProduser.Helpers;
 using AbstractProduser.Options;
 using Autofac.Features.OwnedInstances;
 using CSharpFunctionalExtensions;
+using Newtonsoft.Json;
+using Shared;
 
 namespace ProdusersMediator
 {
@@ -20,7 +22,7 @@ namespace ProdusersMediator
     /// <summary>
     /// 
     /// </summary>
-    public class ProdusersUnion : IDisposable
+    public class ProdusersUnion<TIn> : IDisposable
     {
         #region fields
 
@@ -81,9 +83,11 @@ namespace ProdusersMediator
         /// <summary>
         /// Отправить всем продюссерам
         /// </summary>
-        public async Task<IList<Result<string, ErrorWrapper>>> SendAll(string message, string invokerName = null)
+        public async Task<IList<Result<string, ErrorWrapper>>> SendAll(ResponsePieceOfDataWrapper<TIn> response, string invokerName = null)
         {
             //TODO: используя _unionOption.InterpreterTypeName интерпретировать message в этот тип и пережать как ответ.
+            
+            var message = ConvertResponse(_unionOption.ConverterName, response);
             var tasks = _produsersDict.Values.Select(produserOwner => produserOwner.Produser.Send(message, invokerName)).ToList();
             var results = await Task.WhenAll(tasks);
             return results;
@@ -93,14 +97,91 @@ namespace ProdusersMediator
         /// <summary>
         /// Отправить продюсеру по ключу
         /// </summary>
-        public async Task<Result<string, ErrorWrapper>> Send(string key, string message, string invokerName = null)
+        public async Task<Result<string, ErrorWrapper>> Send(string key, ResponsePieceOfDataWrapper<TIn> response, string invokerName = null)
         {
             if (!_produsersDict.ContainsKey(key))
                 throw new KeyNotFoundException(key);
 
+            var message = Convert2RawJson(response);
             var result = await _produsersDict[key].Produser.Send(message, invokerName);
             return result;
         }
+
+
+        private static string ConvertResponse(string converterName, ResponsePieceOfDataWrapper<TIn> response)
+        {
+            object convertedResp = null;
+            switch (converterName)
+            {
+                case "Full":
+                    convertedResp = response;
+                    break;
+
+                case "Medium":
+                    convertedResp = new
+                    {
+                        response.DeviceName,
+                        response.DataAction,
+                        response.ExceptionExchangePipline,
+                        response.IsValidAll,
+                        response.TimeAction,
+                        ResponsesItems = response.ResponsesItems.Select(item => new
+                        {
+                            item.RequestId,
+                            item.Status,
+                            item.StatusStr,
+                            item.TransportException,
+                            item.ResponseInfo
+                        }).ToList()
+                    };
+                    break;
+
+                case "Lite":
+                    convertedResp = new
+                    {
+                        response.DeviceName,
+                        response.ExceptionExchangePipline,
+                        response.IsValidAll,
+                        response.TimeAction,
+                        ResponsesItems = response.ResponsesItems.Select(item => new
+                        {
+                            item.RequestId,
+                            item.StatusStr,
+                            item.TransportException,
+                            item.ResponseInfo.StronglyTypedResponse
+                        }).ToList()
+                    };
+                    break;
+            }
+
+            var message = Convert2RawJson(convertedResp);
+            return message;
+        }
+
+
+
+        /// <summary>
+        ///Конвертировать в JSON. Raw -для машин, без отступов  
+        /// </summary>
+        private static string Convert2RawJson(object response) //TODO: вынести в Shared
+        {
+            var settings = new JsonSerializerSettings
+            {
+                Formatting = Formatting.None,                     //Отступы дочерних элементов НЕТ
+                NullValueHandling = NullValueHandling.Ignore      //Игнорировать пустые теги
+            };
+            try
+            {
+                var jsonResp = JsonConvert.SerializeObject(response, settings);
+                return jsonResp;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
 
         #endregion
 

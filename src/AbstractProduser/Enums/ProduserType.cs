@@ -4,6 +4,7 @@
     {
         Kafaka,
         SerilogLoger,
-        SignalR
+        SignalR,
+        HttpClient
     }
 }

@@ -5,6 +5,7 @@ using AbstractProduser.AbstractProduser;
 using AbstractProduser.Enums;
 using AbstractProduser.Options;
 using Autofac;
+using Exchange.Base;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -96,7 +97,7 @@ namespace WebApi
             //produsersFactory.FillProduserUnionByOptionAgregator(agrOption.Value);
 
             //вариант для CWS
-            var produserUnionFactory = scope.Resolve<ProdusersUnionFactory>();
+            var produserUnionFactory = scope.Resolve<ProdusersUnionFactory<AdInputTypeFake>>(); //регистрируем и также резолвим в зависимости от типа входа (AdInputTypeFake).
             var produserUnion = produserUnionFactory.FillProduserUnionByOptionAgregator(agrOption.Value);
             //produserUnion добавить в Storage по ключу
 

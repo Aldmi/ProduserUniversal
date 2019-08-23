@@ -2,6 +2,7 @@
 using AbstractProduser.Enums;
 using AbstractProduser.Options;
 using Autofac;
+using Exchange.Base;
 using KafkaProduser;
 using ProdusersMediator;
 using WebApi.Produsers;
@@ -14,10 +15,10 @@ namespace WebApi.AutofacModules
     {    
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<ProdusersUnionFactory>().InstancePerDependency();//для CWS
+            builder.RegisterType<ProdusersUnionFactory<AdInputTypeFake>>().InstancePerDependency();//для CWS
+            builder.RegisterType<ProdusersFactory<AdInputTypeFake>>().InstancePerDependency();
 
-            builder.RegisterType<ProdusersFactory>().InstancePerDependency();
-            builder.RegisterType<ProdusersUnion>().SingleInstance();
+            builder.RegisterType<ProdusersUnion<AdInputTypeFake>>().SingleInstance();
 
             builder.RegisterType<SignaRProduserClientsStorage>().SingleInstance();
             builder.RegisterType<SignalRProduserWrapper>().As<IProduser<SignalRProduserOption>>().InstancePerDependency();

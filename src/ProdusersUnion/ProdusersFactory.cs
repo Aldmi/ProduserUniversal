@@ -10,9 +10,9 @@ namespace ProdusersMediator
     /// <summary>
     /// Фабрика по созданию продюссеров из опций.
     /// </summary>
-    public class ProdusersFactory
+    public class ProdusersFactory<TIn>
     {
-        private readonly ProdusersUnion _produsersUnion;
+        private readonly ProdusersUnion<TIn> _produsersUnion;
         private readonly Func<SignalRProduserOption, Owned<IProduser<SignalRProduserOption>>> _signalRFactory;
         private readonly Func<KafkaProduserOption, Owned<IProduser<KafkaProduserOption>>> _kafkaFactory;
         private readonly Func<WebClientProduserOption, Owned<IProduser<WebClientProduserOption>>> _webClientFactory;
@@ -20,7 +20,7 @@ namespace ProdusersMediator
 
         #region ctor
 
-        public ProdusersFactory(ProdusersUnion produsersUnion,
+        public ProdusersFactory(ProdusersUnion<TIn> produsersUnion,
                                 Func<SignalRProduserOption, Owned<IProduser<SignalRProduserOption>>> signalRFactory,
                                 Func<KafkaProduserOption, Owned<IProduser<KafkaProduserOption>>> kafkaFactory,
                                 Func<WebClientProduserOption, Owned<IProduser<WebClientProduserOption>>> webClientFactory)

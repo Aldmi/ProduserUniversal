@@ -12,6 +12,13 @@
     <ProjectReference Include="..\AbstractProduser\AbstractProduser.csproj" />
     <ProjectReference Include="..\KaffkaProduser\KafkaProduser.csproj" />
     <ProjectReference Include="..\LogerSerilogProduser\LogerSerilogProduser.csproj" />
+    <ProjectReference Include="..\Shared\Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\newtonsoft.json\11.0.2\lib\netstandard2.0\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

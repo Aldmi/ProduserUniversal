@@ -10,11 +10,9 @@ namespace AbstractProduser.Options
         public string Key { get; set; }
 
         /// <summary>
-        /// Имя интерпритатора типа.
-        /// Входные данные (string) принимаются типом с этим именем и определяют объект.
-        /// Этот объект должен присвоится обратно в ответ полю InterpreterType типа object.
+        /// Имя преобразователя типа ответа.
         /// </summary>
-        public string InterpreterTypeName { get; set; }
+        public string ConverterName { get; set; }
 
         public List<KafkaProduserOption> KafkaProduserOptions { get; set; } = new List<KafkaProduserOption>();
         public List<SignalRProduserOption> SignalRProduserOptions { get; set; }= new List<SignalRProduserOption>();

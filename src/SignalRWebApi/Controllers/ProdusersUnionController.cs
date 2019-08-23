@@ -1,4 +1,5 @@
 ﻿using AbstractProduser.Options;
+using Exchange.Base;
 using Microsoft.AspNetCore.Mvc;
 using ProdusersMediator;
 
@@ -8,13 +9,13 @@ namespace WebApi.Controllers
     [ApiController]
     public class ProdusersUnionController : ControllerBase
     {
-        private readonly ProdusersFactory _produsersFactory;
+        private readonly ProdusersFactory<AdInputTypeFake> _produsersFactory;
 
 
 
         #region ctor
 
-        public ProdusersUnionController(ProdusersFactory produsersFactory)
+        public ProdusersUnionController(ProdusersFactory<AdInputTypeFake> produsersFactory)
         {
             _produsersFactory = produsersFactory;
         }
