@@ -20,7 +20,7 @@ namespace WebApi.AutofacModules
 
             builder.RegisterType<ProdusersUnion<AdInputTypeFake>>().SingleInstance();
 
-            builder.RegisterType<SignaRProduserClientsStorage>().SingleInstance();
+            builder.RegisterType<SignaRProduserClientsStorage<SignaRProdusserClientsInfo>>().SingleInstance();
             builder.RegisterType<SignalRProduserWrapper>().As<IProduser<SignalRProduserOption>>().InstancePerDependency();
 
             builder.RegisterType<KafkaProduserWrapper>().As<IProduser<KafkaProduserOption>>().InstancePerDependency();

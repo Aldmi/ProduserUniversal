@@ -14,13 +14,13 @@ namespace WebApi.Produsers
     public class SignalRProduserWrapper : BaseProduser<SignalRProduserOption>
     {
         private readonly IHubContext<ProviderHub> _hubProxy;
-        private readonly SignaRProduserClientsStorage _clientsStorage;
+        private readonly SignaRProduserClientsStorage<SignaRProdusserClientsInfo> _clientsStorage;
 
 
 
         #region ctor
 
-        public SignalRProduserWrapper(IHubContext<ProviderHub> hubProxy, SignaRProduserClientsStorage clientsStorage, SignalRProduserOption option) 
+        public SignalRProduserWrapper(IHubContext<ProviderHub> hubProxy, SignaRProduserClientsStorage<SignaRProdusserClientsInfo> clientsStorage, SignalRProduserOption option) 
             : base(option)
         {
             _hubProxy = hubProxy;

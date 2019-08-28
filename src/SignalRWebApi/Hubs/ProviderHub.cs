@@ -7,11 +7,11 @@ namespace WebApi.Hubs
 {
     public class ProviderHub : Hub
     {
-        private readonly SignaRProduserClientsStorage _clientsStorage;
+        private readonly SignaRProduserClientsStorage<SignaRProdusserClientsInfo> _clientsStorage;
 
         #region ctor
 
-        public ProviderHub(SignaRProduserClientsStorage clientsStorage)
+        public ProviderHub(SignaRProduserClientsStorage<SignaRProdusserClientsInfo> clientsStorage)
         {
             _clientsStorage = clientsStorage;
         }
@@ -26,7 +26,7 @@ namespace WebApi.Hubs
         public override async Task OnConnectedAsync()
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, "SignalR Users");
-            _clientsStorage.AddClient(Context.ConnectionId, new SignaRClientsInfo(Context.ConnectionId, "SignalR Users"));
+            _clientsStorage.AddClient(Context.ConnectionId, new SignaRProdusserClientsInfo(Context.ConnectionId, "SignalR Users"));
             await base.OnConnectedAsync();
         }
 

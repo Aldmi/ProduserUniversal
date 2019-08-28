@@ -8,15 +8,15 @@ namespace WebApi.SignalRClients
     /// Хранит информацию о клиентах.
     /// Concurrentsy
     /// </summary>
-    public class SignaRProduserClientsStorage
+    public class SignaRProduserClientsStorage<T> where T : SignaRClientsInfoBase
     {
-        private readonly ConcurrentDictionary<string, SignaRClientsInfo> _clientsInfos  = new ConcurrentDictionary<string, SignaRClientsInfo>();
+        private readonly ConcurrentDictionary<string, T> _clientsInfos  = new ConcurrentDictionary<string, T>();
 
 
 
         #region prop
 
-        public List<SignaRClientsInfo> GetClientsInfo => _clientsInfos.Values.ToList();
+        public List<T> GetClientsInfo => _clientsInfos.Values.ToList();
         public bool Any => _clientsInfos.Count > 0;
 
         #endregion
@@ -25,7 +25,7 @@ namespace WebApi.SignalRClients
 
         #region Methode
 
-        public bool AddClient(string key, SignaRClientsInfo value)
+        public bool AddClient(string key, T value)
         {
            var res= _clientsInfos.TryAdd(key, value);
            return res;
@@ -39,7 +39,7 @@ namespace WebApi.SignalRClients
         }
 
 
-        public bool GetClient(string key, out SignaRClientsInfo value)
+        public bool GetClient(string key, out T value)
         {
             var res = _clientsInfos.TryGetValue(key, out var val);
             value = val;
